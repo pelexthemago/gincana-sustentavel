@@ -6,18 +6,21 @@ const firebaseConfig = {
   messagingSenderId: "732021087135",
   appId: "1:732021087135:web:43058304d2b371732ebbaa"
 };
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+// 2. Inicializa o Firebase Clássico
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
+// 3. Elementos da Tela
 const form = document.getElementById('action-form');
 const submitBtn = document.getElementById('submit-btn');
 const successMessage = document.getElementById('success-message');
 const feedContainer = document.getElementById('feed-container');
 const destaqueContainer = document.getElementById('destaque-container');
 
-// Envio do Formulário
+// 4. Envio do Formulário
 form.addEventListener('submit', async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Agora este comando vai funcionar perfeitamente
+    
     const originalBtnText = submitBtn.innerHTML;
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publicando...';
     submitBtn.disabled = true;
@@ -27,11 +30,11 @@ form.addEventListener('submit', async (e) => {
     const descricao = document.getElementById('descricao').value.trim();
 
     try {
-        await addDoc(collection(db, "acoes"), {
+        await db.collection("acoes").add({
             autor: `${nome} ${sobrenome}`,
             descricao: descricao,
             curtidas: 0,
-            data: serverTimestamp()
+            data: firebase.firestore.FieldValue.serverTimestamp()
         });
 
         form.reset();
@@ -48,20 +51,21 @@ form.addEventListener('submit', async (e) => {
 
     } catch (error) {
         console.error("Erro ao salvar: ", error);
-        alert("Ocorreu um erro ao enviar seu relato. Tente novamente.");
+        alert("Erro ao enviar. Verifique se configurou as chaves do Firebase e se o Firestore foi criado.");
     } finally {
         submitBtn.innerHTML = originalBtnText;
         submitBtn.disabled = false;
     }
 });
 
+// 5. Formatação de Data
 function formatarData(timestamp) {
     if(!timestamp) return 'Agora mesmo';
     const data = timestamp.toDate();
     return data.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
 }
 
-// Gera o HTML do Card (usado para o feed normal e para o destaque)
+// 6. Gerador de HTML dos Cards
 function criarHTMLDoCard(acao, id, isDestaque = false) {
     const destaqueLabel = isDestaque ? `<div class="destaque-label"><i class="fas fa-trophy"></i> Destaque da Semana</div>` : '';
     const cardClass = isDestaque ? 'feed-card card-destaque' : 'feed-card';
@@ -83,11 +87,9 @@ function criarHTMLDoCard(acao, id, isDestaque = false) {
     `;
 }
 
-// Carrega o Feed e define o Destaque
+// 7. Carrega o Feed e o Destaque
 function carregarFeed() {
-    const q = query(collection(db, "acoes"), orderBy("data", "desc"));
-    
-    onSnapshot(q, (snapshot) => {
+    db.collection("acoes").orderBy("data", "desc").onSnapshot((snapshot) => {
         feedContainer.innerHTML = ''; 
         destaqueContainer.innerHTML = '';
         destaqueContainer.classList.add('hidden');
@@ -98,14 +100,13 @@ function carregarFeed() {
         }
 
         const dataLimite = new Date();
-        dataLimite.setDate(dataLimite.getDate() - 7); // Últimos 7 dias
+        dataLimite.setDate(dataLimite.getDate() - 7);
 
         let relatoDestaque = null;
         let idDestaque = null;
         let maiorNumCurtidas = 0;
         const todosRelatos = [];
 
-        // Primeira passada: encontrar o destaque e salvar os dados
         snapshot.forEach((docSnap) => {
             const acao = docSnap.data();
             const id = docSnap.id;
@@ -113,7 +114,6 @@ function carregarFeed() {
 
             if (acao.data) {
                 const dataAcao = acao.data.toDate();
-                // Verifica se é dos últimos 7 dias e tem o maior número de curtidas (mínimo 1)
                 if (dataAcao >= dataLimite && acao.curtidas > maiorNumCurtidas) {
                     maiorNumCurtidas = acao.curtidas;
                     relatoDestaque = acao;
@@ -122,30 +122,32 @@ function carregarFeed() {
             }
         });
 
-        // Renderiza o Destaque, se houver
         if (relatoDestaque) {
             destaqueContainer.innerHTML = criarHTMLDoCard(relatoDestaque, idDestaque, true);
             destaqueContainer.classList.remove('hidden');
         }
 
-        // Renderiza o resto do feed
         todosRelatos.forEach(({ id, acao }) => {
-            // Evita duplicar o destaque no feed geral
             if (id !== idDestaque) {
                 feedContainer.innerHTML += criarHTMLDoCard(acao, id, false);
             }
         });
+    }, (error) => {
+        console.error("Erro no feed: ", error);
+        feedContainer.innerHTML = '<p style="text-align:center; color:red;">Falha ao carregar. Configure o firebaseConfig e verifique as regras do Firestore.</p>';
     });
 }
 
-// Sistema de Curtidas
+// 8. Sistema de Curtidas Global
 window.curtirAcao = async (id) => {
     try {
-        const docRef = doc(db, "acoes", id);
-        await updateDoc(docRef, { curtidas: increment(1) });
+        await db.collection("acoes").doc(id).update({
+            curtidas: firebase.firestore.FieldValue.increment(1)
+        });
     } catch (error) {
         console.error("Erro ao curtir:", error);
     }
 };
 
+// 9. Inicializa
 carregarFeed();
