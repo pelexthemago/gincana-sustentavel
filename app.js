@@ -32,15 +32,13 @@ form.addEventListener('submit', async (e) => {
     const descricao = document.getElementById('descricao').value.trim();
 
     try {
-        // Salva no banco (O Firebase vai disparar a atualização na tela na mesma hora localmente)
         await db.collection("acoes").add({
             autor: `${nome} ${sobrenome}`,
             descricao: descricao,
             curtidas: 0,
-            data: new Date() // Usando o relógio local para aparecer INSTANTANEAMENTE
+            data: new Date()
         });
 
-        // Feedback visual
         form.reset();
         form.classList.add('hidden');
         successMessage.classList.remove('hidden');
@@ -65,12 +63,11 @@ form.addEventListener('submit', async (e) => {
 // Formatação de Data
 function formatarData(dataReal) {
     if(!dataReal) return 'Agora mesmo';
-    // Se vier do Firebase como Timestamp, converte. Se já for Date local, usa direto.
     const data = dataReal.toDate ? dataReal.toDate() : new Date(dataReal);
     return data.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
 }
 
-// Gerador de HTML dos Cards (Com botão de Excluir)
+// Gerador de HTML dos Cards
 function criarHTMLDoCard(acao, id, isDestaque = false) {
     const destaqueLabel = isDestaque ? `<div class="destaque-label"><i class="fas fa-trophy"></i> Destaque da Semana</div>` : '';
     const cardClass = isDestaque ? 'feed-card card-destaque' : 'feed-card';
@@ -95,7 +92,7 @@ function criarHTMLDoCard(acao, id, isDestaque = false) {
     `;
 }
 
-// Carrega o Feed e o Destaque
+// Carrega o Feed
 function carregarFeed() {
     db.collection("acoes").orderBy("data", "desc").onSnapshot((snapshot) => {
         feedContainer.innerHTML = ''; 
@@ -146,7 +143,7 @@ function carregarFeed() {
     });
 }
 
-// Sistema de Curtidas Global
+// Sistema de Curtidas
 window.curtirAcao = async (id) => {
     try {
         await db.collection("acoes").doc(id).update({
