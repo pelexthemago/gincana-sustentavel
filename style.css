@@ -61,8 +61,13 @@ textarea { resize: vertical; margin-bottom: 15px; }
 .card-author { font-weight: bold; color: var(--primary-color); font-size: 1.1rem; }
 .card-date { font-size: 0.85rem; color: var(--text-muted); }
 .card-actions { border-top: 1px solid var(--border-color); padding-top: 15px; display: flex; align-items: center; }
+
+/* Botões de Ação do Card */
 .like-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1.1rem; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
 .like-btn:hover { color: var(--primary-color); transform: scale(1.05); }
+
+.delete-btn { background: none; border: none; cursor: pointer; color: #dc3545; font-size: 1rem; display: flex; align-items: center; gap: 8px; transition: 0.2s; margin-left: auto; }
+.delete-btn:hover { color: #a71d2a; transform: scale(1.05); }
 
 /* Card Destaque */
 #destaque-container { margin-bottom: 30px; }
