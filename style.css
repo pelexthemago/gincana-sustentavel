@@ -74,93 +74,34 @@ textarea { resize: vertical; margin-bottom: 15px; }
 .card-destaque { border: 2px solid var(--gold); box-shadow: 0 4px 15px rgba(255, 179, 0, 0.15); position: relative; }
 .destaque-label { position: absolute; top: -14px; left: 20px; background: var(--gold); color: #fff; font-weight: bold; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; display: flex; align-items: center; gap: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 
+/* =========================================
+   PROGRAMA DE SUSTENTABILIDADE (TEXTOS)
+   ========================================= */
+.program-section { margin-top: 60px; }
+
+.program-header-main { text-align: center; margin-bottom: 30px; background: var(--card-bg); padding: 30px 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-top: 4px solid var(--primary-color); }
+.program-header-main h3 { color: var(--primary-color); font-size: 1.6rem; margin-bottom: 10px; }
+.program-subtitle { color: var(--text-muted); font-size: 1.05rem; }
+
+.program-grid { display: flex; flex-direction: column; gap: 20px; }
+
+.program-card { background: var(--card-bg); border-radius: 12px; padding: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid var(--border-color); }
+
+.program-content h4 { color: var(--primary-color); font-size: 1.3rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+
+/* Espaçamento 1,5 entre linhas (estilo Word) */
+.program-content p { 
+    font-size: 1rem; 
+    color: var(--text-main); 
+    line-height: 1.5; 
+    margin-bottom: 15px; 
+    text-align: justify; 
+}
+.program-content p:last-child { margin-bottom: 0; }
+
 /* Responsividade */
 @media (max-width: 600px) {
     .input-group { flex-direction: column; }
     .hero-buttons { flex-direction: column; }
-}
-/* =========================================
-   PROGRAMA DE SUSTENTABILIDADE (NOVO EBOOK)
-   ========================================= */
-.program-section {
-    margin-top: 60px;
-}
-
-.program-header-main {
-    text-align: center;
-    margin-bottom: 30px;
-    background: var(--card-bg);
-    padding: 30px 20px;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    border-top: 4px solid var(--primary-color);
-}
-
-.program-header-main h3 {
-    color: var(--primary-color);
-    font-size: 1.6rem;
-    margin-bottom: 10px;
-}
-
-.program-subtitle {
-    color: var(--text-muted);
-    font-size: 1.05rem;
-}
-
-.program-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 25px;
-}
-
-.program-card {
-    background: var(--card-bg);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    transition: transform 0.3s;
-    border: 1px solid var(--border-color);
-}
-
-.program-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-}
-
-.program-img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-    border-bottom: 3px solid var(--primary-color);
-}
-
-.program-content {
-    padding: 25px;
-}
-
-.program-content h4 {
-    color: var(--primary-color);
-    font-size: 1.2rem;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.program-content p {
-    font-size: 0.95rem;
-    color: var(--text-main);
-    margin-bottom: 12px;
-    text-align: justify;
-}
-
-.program-content p:last-child {
-    margin-bottom: 0;
-}
-
-/* Ajuste Mobile para o Grid */
-@media (max-width: 768px) {
-    .program-grid {
-        grid-template-columns: 1fr;
-    }
+    .program-card { padding: 20px; }
 }
