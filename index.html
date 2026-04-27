@@ -1,28 +1,73 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Gincana Sustentável</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sustentabilidade em Ação</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
+    <header>
+        <div class="container header-content">
+            <h1>🌱 Atitude Sustentável</h1>
+            <nav>
+                <a href="#home">Início</a>
+                <a href="#mural">Mural</a>
+                <a href="#ebook">Material</a>
+            </nav>
+        </div>
+    </header>
 
-<h1>🌱 1 atitude sustentável por semana</h1>
+    <main class="container">
+        <section id="home" class="hero-section">
+            <h2>1 Atitude Sustentável por Semana</h2>
+            <p>Pequenas ações geram grandes impactos. Compartilhe suas práticas sustentáveis, inspire a equipe e ajude a construir um ambiente de trabalho mais eficiente e limpo!</p>
+            <div class="hero-buttons">
+                <a href="#form-section" class="btn btn-primary">Registrar Relato</a>
+                <a href="#mural" class="btn btn-outline">Ler Relatos</a>
+            </div>
+        </section>
 
-<input id="nome" placeholder="Nome">
-<input id="sobrenome" placeholder="Sobrenome">
-<textarea id="descricao" placeholder="Sua ação..."></textarea>
+        <section id="form-section" class="card-container">
+            <h3>Registre sua Atitude</h3>
+            <form id="action-form">
+                <div class="input-group">
+                    <input type="text" id="nome" placeholder="Nome *" required>
+                    <input type="text" id="sobrenome" placeholder="Sobrenome *" required>
+                </div>
+                
+                <textarea id="descricao" rows="4" placeholder="Descreva sua atitude sustentável (Ex: Separação correta de resíduos no canteiro/escritório, otimização de materiais, redução de energia...)" required></textarea>
 
-<button onclick="enviar()">Enviar</button>
+                <button type="submit" id="submit-btn" class="btn btn-primary btn-full">
+                    <i class="fas fa-paper-plane"></i> Publicar Relato
+                </button>
+            </form>
+            <div id="success-message" class="hidden alert-success">
+                ✅ Obrigado por compartilhar! Seu relato já está no mural. 👇
+            </div>
+        </section>
 
-<p id="mensagem"></p>
+        <section id="mural">
+            <div class="mural-header">
+                <h3>Mural de Ações 🏅</h3>
+                <span class="badge">Atualizações ao vivo</span>
+            </div>
+            
+            <div id="destaque-container" class="hidden"></div>
 
-<hr>
+            <div id="feed-container" class="feed-grid">
+                <div class="loading">Carregando relatos...</div>
+            </div>
+        </section>
 
-<h2>Ações</h2>
-<div id="mural"></div>
+        <section id="ebook" class="card-container text-center">
+            <h3>Biblioteca de Sustentabilidade</h3>
+            <p>Acesse nosso guia corporativo com diretrizes de gestão ambiental e descarte de resíduos.</p>
+            <iframe src="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" width="100%" height="400px" style="border: none; border-radius: 8px; margin-top: 15px;"></iframe>
+        </section>
+    </main>
 
-<script type="module" src="app.js"></script>
-
+    <script type="module" src="app.js"></script>
 </body>
 </html>
