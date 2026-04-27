@@ -37,7 +37,7 @@ section { margin: 40px 0; padding-top: 20px; }
 .btn-outline:hover { background-color: var(--primary-color); color: white; }
 .btn-full { width: 100%; margin-top: 15px; }
 
-/* Formulário */
+/* Formulário e Cards Base */
 .card-container { background: var(--card-bg); padding: 30px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
 .card-container h3 { margin-bottom: 20px; color: var(--primary-color); border-bottom: 2px solid var(--border-color); padding-bottom: 10px; }
 .input-group { display: flex; gap: 15px; margin-bottom: 15px; }
@@ -75,33 +75,30 @@ textarea { resize: vertical; margin-bottom: 15px; }
 .destaque-label { position: absolute; top: -14px; left: 20px; background: var(--gold); color: #fff; font-weight: bold; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; display: flex; align-items: center; gap: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 
 /* =========================================
-   PROGRAMA DE SUSTENTABILIDADE (TEXTOS)
+   PROGRAMA DE SUSTENTABILIDADE (TIPO WORD)
    ========================================= */
-.program-section { margin-top: 60px; }
+.doc-section { margin-top: 60px; padding: 40px; }
+.doc-title { text-align: center; font-size: 1.5rem !important; margin-bottom: 30px !important; }
 
-.program-header-main { text-align: center; margin-bottom: 30px; background: var(--card-bg); padding: 30px 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-top: 4px solid var(--primary-color); }
-.program-header-main h3 { color: var(--primary-color); font-size: 1.6rem; margin-bottom: 10px; }
-.program-subtitle { color: var(--text-muted); font-size: 1.05rem; }
-
-.program-grid { display: flex; flex-direction: column; gap: 20px; }
-
-.program-card { background: var(--card-bg); border-radius: 12px; padding: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid var(--border-color); }
-
-.program-content h4 { color: var(--primary-color); font-size: 1.3rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
-
-/* Espaçamento 1,5 entre linhas (estilo Word) */
-.program-content p { 
-    font-size: 1rem; 
-    color: var(--text-main); 
-    line-height: 1.5; 
-    margin-bottom: 15px; 
-    text-align: justify; 
+.doc-content h4 {
+    color: var(--primary-color);
+    font-size: 1.25rem;
+    margin-top: 35px;
+    margin-bottom: 15px;
 }
-.program-content p:last-child { margin-bottom: 0; }
+
+/* Aqui está o segredo do espaçamento 1.5 do Word */
+.doc-content p {
+    font-size: 1.05rem;
+    color: var(--text-main);
+    line-height: 1.9; /* Forçando um espaçamento largo entre as linhas */
+    margin-bottom: 20px; /* Forçando espaçamento entre os parágrafos */
+    text-align: justify;
+}
 
 /* Responsividade */
 @media (max-width: 600px) {
     .input-group { flex-direction: column; }
     .hero-buttons { flex-direction: column; }
-    .program-card { padding: 20px; }
+    .doc-section { padding: 20px; }
 }
