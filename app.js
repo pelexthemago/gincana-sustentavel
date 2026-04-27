@@ -6,20 +6,22 @@ const firebaseConfig = {
   messagingSenderId: "732021087135",
   appId: "1:732021087135:web:43058304d2b371732ebbaa"
 };
-// 2. Inicializa o Firebase Clássico
-firebase.initializeApp(firebaseConfig);
+// Inicializa o Firebase Clássico
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
 const db = firebase.firestore();
 
-// 3. Elementos da Tela
+// Elementos da Tela
 const form = document.getElementById('action-form');
 const submitBtn = document.getElementById('submit-btn');
 const successMessage = document.getElementById('success-message');
 const feedContainer = document.getElementById('feed-container');
 const destaqueContainer = document.getElementById('destaque-container');
 
-// 4. Envio do Formulário
+// Envio do Formulário (Com Exibição Imediata)
 form.addEventListener('submit', async (e) => {
-    e.preventDefault(); // Agora este comando vai funcionar perfeitamente
+    e.preventDefault();
     
     const originalBtnText = submitBtn.innerHTML;
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publicando...';
@@ -30,13 +32,15 @@ form.addEventListener('submit', async (e) => {
     const descricao = document.getElementById('descricao').value.trim();
 
     try {
+        // Salva no banco (O Firebase vai disparar a atualização na tela na mesma hora localmente)
         await db.collection("acoes").add({
             autor: `${nome} ${sobrenome}`,
             descricao: descricao,
             curtidas: 0,
-            data: firebase.firestore.FieldValue.serverTimestamp()
+            data: new Date() // Usando o relógio local para aparecer INSTANTANEAMENTE
         });
 
+        // Feedback visual
         form.reset();
         form.classList.add('hidden');
         successMessage.classList.remove('hidden');
@@ -46,26 +50,27 @@ form.addEventListener('submit', async (e) => {
             setTimeout(() => {
                 form.classList.remove('hidden');
                 successMessage.classList.add('hidden');
-            }, 4000);
-        }, 1000);
+            }, 3000);
+        }, 500);
 
     } catch (error) {
         console.error("Erro ao salvar: ", error);
-        alert("Erro ao enviar. Verifique se configurou as chaves do Firebase e se o Firestore foi criado.");
+        alert("Erro ao enviar. Verifique o console ou as chaves do Firebase.");
     } finally {
         submitBtn.innerHTML = originalBtnText;
         submitBtn.disabled = false;
     }
 });
 
-// 5. Formatação de Data
-function formatarData(timestamp) {
-    if(!timestamp) return 'Agora mesmo';
-    const data = timestamp.toDate();
+// Formatação de Data
+function formatarData(dataReal) {
+    if(!dataReal) return 'Agora mesmo';
+    // Se vier do Firebase como Timestamp, converte. Se já for Date local, usa direto.
+    const data = dataReal.toDate ? dataReal.toDate() : new Date(dataReal);
     return data.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
 }
 
-// 6. Gerador de HTML dos Cards
+// Gerador de HTML dos Cards (Agora com botão de Excluir)
 function criarHTMLDoCard(acao, id, isDestaque = false) {
     const destaqueLabel = isDestaque ? `<div class="destaque-label"><i class="fas fa-trophy"></i> Destaque da Semana</div>` : '';
     const cardClass = isDestaque ? 'feed-card card-destaque' : 'feed-card';
@@ -82,12 +87,15 @@ function criarHTMLDoCard(acao, id, isDestaque = false) {
                 <button class="like-btn" onclick="curtirAcao('${id}')">
                     <i class="far fa-thumbs-up"></i> <span id="count-${id}">${acao.curtidas || 0}</span> Curtidas
                 </button>
+                <button class="delete-btn" onclick="excluirAcao('${id}')" title="Excluir este relato">
+                    <i class="fas fa-trash-alt"></i> Excluir
+                </button>
             </div>
         </div>
     `;
 }
 
-// 7. Carrega o Feed e o Destaque
+// Carrega o Feed e o Destaque
 function carregarFeed() {
     db.collection("acoes").orderBy("data", "desc").onSnapshot((snapshot) => {
         feedContainer.innerHTML = ''; 
@@ -113,7 +121,7 @@ function carregarFeed() {
             todosRelatos.push({ id, acao });
 
             if (acao.data) {
-                const dataAcao = acao.data.toDate();
+                const dataAcao = acao.data.toDate ? acao.data.toDate() : new Date(acao.data);
                 if (dataAcao >= dataLimite && acao.curtidas > maiorNumCurtidas) {
                     maiorNumCurtidas = acao.curtidas;
                     relatoDestaque = acao;
@@ -138,7 +146,7 @@ function carregarFeed() {
     });
 }
 
-// 8. Sistema de Curtidas Global
+// Sistema de Curtidas Global
 window.curtirAcao = async (id) => {
     try {
         await db.collection("acoes").doc(id).update({
@@ -149,5 +157,17 @@ window.curtirAcao = async (id) => {
     }
 };
 
-// 9. Inicializa
+// Sistema de Exclusão Global
+window.excluirAcao = async (id) => {
+    if(confirm("Tem certeza que deseja excluir este relato?")) {
+        try {
+            await db.collection("acoes").doc(id).delete();
+        } catch (error) {
+            console.error("Erro ao excluir:", error);
+            alert("Erro ao excluir. Verifique sua conexão e permissões.");
+        }
+    }
+};
+
+// Inicializa
 carregarFeed();
