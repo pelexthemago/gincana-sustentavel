@@ -70,7 +70,7 @@ function formatarData(dataReal) {
     return data.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
 }
 
-// Gerador de HTML dos Cards (Agora com botão de Excluir)
+// Gerador de HTML dos Cards (Com botão de Excluir)
 function criarHTMLDoCard(acao, id, isDestaque = false) {
     const destaqueLabel = isDestaque ? `<div class="destaque-label"><i class="fas fa-trophy"></i> Destaque da Semana</div>` : '';
     const cardClass = isDestaque ? 'feed-card card-destaque' : 'feed-card';
